@@ -10,3 +10,5 @@ class Cat(models.Model):
     # new code below
     def __str__(self):
         return self.name
+    
+    
