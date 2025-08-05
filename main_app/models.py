@@ -2,12 +2,25 @@ from django.db import models
 # Import the reverse function
 from django.urls import reverse
 
+# Add the Toy model, and move it above the Cat model
+class Toy(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('toy-detail', kwargs={'pk': self.id})
+    
 # Create your models here.
 class Cat(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    # Add the M:M relationship
+    toys = models.ManyToManyField(Toy)
 
     # new code below
     def __str__(self):
@@ -49,14 +62,5 @@ class Feeding(models.Model):
         ordering = ['-date']  # This line makes the newest feedings appear first
     
 
-# Add the Toy model
-class Toy(models.Model):
-    name = models.CharField(max_length=50)
-    color = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse('toy-detail', kwargs={'pk': self.id})
 
