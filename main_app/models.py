@@ -1,6 +1,8 @@
 from django.db import models
 # Import the reverse function
 from django.urls import reverse
+# Import the User
+from django.contrib.auth.models import User
 
 # Add the Toy model, and move it above the Cat model
 class Toy(models.Model):
@@ -21,6 +23,8 @@ class Cat(models.Model):
     age = models.IntegerField()
     # Add the M:M relationship
     toys = models.ManyToManyField(Toy)
+    # Add the foreign key linking to a user instance
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # new code below
     def __str__(self):

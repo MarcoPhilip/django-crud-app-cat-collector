@@ -4,7 +4,8 @@ from . import views # Import views to connect routes to view functions
 urlpatterns = [
     # Routes will be added here
     path('about/', views.about, name='about'),
-    path('', views.home, name='home'),
+    # Home route
+    path('', views.Home.as_view(), name='home'),
     # route for a single cat
     path('cats/<int:cat_id>/', views.cat_detail, name='cat-detail'),
     # route for cats index
@@ -32,4 +33,7 @@ urlpatterns = [
     path('cats/<int:cat_id>/associate-toy/<int:toy_id>/', views.associate_toy, name='associate-toy'),
     # Remove a toy from a cat
     path('cats/<int:cat_id>/remove-toy/<int:toy_id>/', views.remove_toy, name='remove-toy'),
+    # Signup
+    path('accounts/signup/', views.signup, name='signup'),
+
 ]
