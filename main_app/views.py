@@ -17,13 +17,18 @@ from django.contrib.auth.decorators import login_required
 # Import the mixin for class-based views
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
+
+
+
 # ! Create your views here.
 
 # Define the home view function
 # Comment this out and replace it with login view
 # def home(request):
 #     # Send a simple HTML response
-#     return render(request, 'home.html')
+#     return render(request, 'home.html')pipenv 
 
 class Home(LoginView):
     template_name = 'home.html'
@@ -60,6 +65,7 @@ def signup(request):
     # )
 
 @login_required
+@permission_required("main_app.view_cat")
 def cat_index(request):
     cats = Cat.objects.filter(user=request.user)
     # You could also retrieve the logged in user's cats like this
@@ -94,12 +100,14 @@ def add_feeding(request, cat_id):
     return redirect('cat-detail', cat_id=cat_id)
 
 @login_required
+@permission_required("main_app.add_toy")
 def associate_toy(request, cat_id, toy_id):
     # Note that you can pass a toy's id instead of the whole object
     Cat.objects.get(id=cat_id).toys.add(toy_id)
     return redirect('cat-detail', cat_id=cat_id)
 
 @login_required
+@permission_required("main_app.delete_toy")
 def remove_toy(request, cat_id, toy_id):
     # Look up the cat
     cat = Cat.objects.get(id=cat_id)
@@ -131,12 +139,14 @@ class CatDelete(LoginRequiredMixin, DeleteView):
     model = Cat
     success_url = '/cats/'
 
-class ToyCreate(LoginRequiredMixin, CreateView):
+class ToyCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Toy
     fields = '__all__'
-
-class ToyList(LoginRequiredMixin, ListView):
+    permission_required = ("main_app.add_toy")
+    
+class ToyList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Toy
+    permission_required = ("main_app.add_toy")
 
 class ToyDetail(LoginRequiredMixin, DetailView):
     model = Toy
